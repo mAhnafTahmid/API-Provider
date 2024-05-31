@@ -1,9 +1,10 @@
 import express from 'express'
-import { signUp } from '../Controllers/allControllers.js'
+import { signUp, login } from '../Controllers/allControllers.js'
 const allRoutes = express()
 
 
 allRoutes.post('/signup', signUp)
+allRoutes.post('/login', login)
 
 
 export default allRoutes

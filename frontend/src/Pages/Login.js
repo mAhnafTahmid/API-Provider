@@ -11,7 +11,7 @@ const Login = () => {
     e.preventDefault()
     try {
         const response = await fetch('http://localhost:3501/login', {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -29,7 +29,7 @@ const Login = () => {
         }
         else {
             alert('Login unsuccessful!')
-            console.log('Login Unsuccessful!')
+            console.log(response.message)
         }
     } catch (error) {
         console.log('Unable to connect to server', error)
@@ -60,7 +60,7 @@ const Login = () => {
                     className="bg-white text-black border rounded-full px-6 py-3 hover:bg-gray-500 hover:text-white mx-auto mt-7 focus:outline-none focus-visible:bg-gray-500 focus-visible:text-white shadow focus-visible:shadow-inner"
                     onClick={(e) => {handleSignUp(e)}}
                 >
-                    Sign Up
+                    Login
                 </button>
             </div>
             
