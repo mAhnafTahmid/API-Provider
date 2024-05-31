@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import allRoutes from './Routes/allRoutes.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 dotenv.config()
@@ -12,6 +13,7 @@ const dbUrl = process.env.dbString
 
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 
 
 // Routes

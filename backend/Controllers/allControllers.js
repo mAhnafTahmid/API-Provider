@@ -1,6 +1,9 @@
 import User from "../Models/userSchema.js"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 
 export const signUp = async (req, res) => {
@@ -44,12 +47,13 @@ export const signUp = async (req, res) => {
     }
 }
 
-function generateJWT(user, secretKey) {
+function generateJWT(user) {
+    const secretKey = process.env.secretKey
+
     const payload = {
         id: user._id,
         email: user.email
     }
-
 
     const options = {
       expiresIn: '1h',
@@ -61,7 +65,6 @@ function generateJWT(user, secretKey) {
 
 export const login = async (req, res) => {
     try {
-        const secretKey = 'your-secret-key'
         const user = await User.findOne({ email: req.body.email })
 
         if (!user) {
@@ -79,7 +82,7 @@ export const login = async (req, res) => {
         }
 
         try {
-            const token = generateJWT(user, secretKey)
+            const token = generateJWT(user)
             res.status(200).cookie('token', token, { httpOnly: true, maxAge: 3600000 }).send({
                 message: 'Login Successful!'
             })
