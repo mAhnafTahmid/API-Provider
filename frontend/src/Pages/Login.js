@@ -7,10 +7,10 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSignUp = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('http://localhost:3501/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,14 +21,18 @@ const Login = () => {
             })
         })
         if (response.ok) {
-            alert('Login Successful!')
-            setEmail('')
-            setPassword('')
-            console.log('Login Successful!')
-            navigate('/profile')
+            const data = await response.json();
+            const token = data.token; 
+            localStorage.setItem('email', email)
+            localStorage.setItem('jwt', token); 
+            setEmail('');
+            setPassword('');
+            console.log('Login Successful!');
+            alert('Login Successful!');
+            navigate('/profile');
         }
         else {
-            alert('Login unsuccessful!')
+            alert('Unable to login!')
             console.log(response.message)
         }
     } catch (error) {
@@ -58,7 +62,7 @@ const Login = () => {
                 />
                 <button 
                     className="bg-white text-black border rounded-full px-6 py-3 hover:bg-gray-500 hover:text-white mx-auto mt-7 focus:outline-none focus-visible:bg-gray-500 focus-visible:text-white shadow focus-visible:shadow-inner"
-                    onClick={(e) => {handleSignUp(e)}}
+                    onClick={(e) => {handleLogin(e)}}
                 >
                     Login
                 </button>

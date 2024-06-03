@@ -1,23 +1,32 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const [tokens, setTokens] = useState([])
+  const navigate = useNavigate()
 
   const handleCreateToken = async (e) => {
     e.preventDefault()
+    const token = localStorage.getItem('jwt')
     try {
-      const response = await fetch('http://localhost:3000/token', {
+      const response = await fetch('http://localhost:3501/token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
-        withCredentials: true
       });
       if (response.ok) {
-        setTokens(response.tokens)
+        const data = await response.json()
+        setTokens(data.tokens)
         alert('Your token has been generated successfully!')
+      }
+      else {
+        localStorage.removeItem('jwt')
+        localStorage.removeItem('email')
+        alert('Your authorization token has expired! Please login again!')
+        navigate('/login')
       }
     } catch (error) {
       console.log(error.message)

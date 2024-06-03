@@ -84,9 +84,8 @@ export const login = async (req, res) => {
 
         try {
             const token = generateJWT(user)
-            res.cookie('token', token, { httpOnly: true, maxAge: 3600000, sameSite: 'Lax', path: '/' })
             res.status(200).send({
-                message: 'Login Successful!'
+                message: 'Login Successful!', token
             })
         } catch (error) {
             console.log({
@@ -103,18 +102,9 @@ export const login = async (req, res) => {
 
 export const generateToken = async (req, res) => {
     try {
-        const token = req.cookies.token;
-
-        if (!token) {
-            return res.status(401).send('Unauthorized: No token provided');
-        }
-
-        const secretKey = process.env.secretKey;
-
-        const decoded = jwt.verify(token, secretKey);
-
-        const email = decoded.email
+        const email = req.user.email;
         const user = await User.findOne({ email: email })
+        const secretKey = process.env.secretKey
 
         if (!user) {
             return res.status(400).send('Invalid User!')
@@ -129,7 +119,7 @@ export const generateToken = async (req, res) => {
         }
 
         const options = {
-        expiresIn: '1h',
+            expiresIn: '1h',
         };
     
         const newToken = jwt.sign(payload, secretKey, options);

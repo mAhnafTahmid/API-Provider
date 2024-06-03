@@ -2,22 +2,33 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
-export const authChecker = (req, res, next) => {
-    const token = req.cookies.token
-    const secretKey = process.env.secretKey
+const extractTokenFromHeader = (req) => {
+    const authHeader = req.headers['authorization']
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7)
+        return token;
+    }
+    return null;
+};
 
-    if (!token) {
-        return res.status(400).send({
-            message: 'Access Denied!'
-        })
-    }
+const verifyToken = (token) => {
     try {
-        const decoded = jwt.verify(token, secretKey)
-        req.user = decoded
-        next()
+        const decoded = jwt.verify(token, process.env.secretKey);
+        return decoded;
     } catch (error) {
-        res.status(400).send({
-            message: 'Invalid Token!'
-        })
+        return null;
     }
-}
+};
+
+export const authenticateToken = (req, res, next) => {
+    const token = extractTokenFromHeader(req);
+    if (!token) {
+        return res.status(401).send('Unauthorized: Missing or invalid token');
+    }
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+        return res.status(401).send('Unauthorized: Invalid token');
+    }
+    req.user = decodedToken;
+    next();
+};
