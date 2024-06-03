@@ -134,3 +134,19 @@ export const generateToken = async (req, res) => {
         })
     }
 }
+
+export const getToken = async (req, res) => {
+    try {
+        const email = req.user.email;
+        const user = await User.findOne({ email: email })
+        if (!user) {
+            return res.status(400).send('Invalid User!')
+        }
+        res.status(200).send(user.tokens)
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send({
+            message: 'Internal Server Error!'
+        })
+    }
+}
