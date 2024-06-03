@@ -13,6 +13,9 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    tokens: {
+        type: [],
+    },
 })
 
 export default mongoose.model('User', userSchema)
