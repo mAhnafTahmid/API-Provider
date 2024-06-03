@@ -111,7 +111,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="w-1/3 text-white bg-black flex flex-col items-center min-h-full">
-          <div className="flex flex-col border border-gray-500 rounded-2xl p-4 mt-8 mx-4 items-center sm:mx-20">
+          <div className="flex flex-col border border-gray-500 rounded-2xl p-4 mt-8 mx-4 items-center sm:mx-20 mb-20">
             <h2 className="text-purple-400 text-center text-2xl text-bold">
               Use our API to send a POST request! Keep in mind a token is needed to use the API.  
             </h2>

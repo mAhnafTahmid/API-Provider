@@ -150,3 +150,28 @@ export const getToken = async (req, res) => {
         })
     }
 }
+
+export const apiService = async (req, res) => {
+    try {
+        const token = req.body.token
+        if (!token) {
+            return res.status(400).send({
+                message: 'No token given! Need to send token to receive service!'
+            })
+        }
+
+        const decoded = jwt.verify(token, process.env.secretKey);
+        if (!decoded) {
+            return res.status(400).send({
+                message: 'Token expired or is not valid!'
+            })
+        }
+        const numberOfUsers = await User.countDocuments()
+        res.status(200).json(numberOfUsers)
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send({
+            message: error.message
+        })
+    }
+} 
