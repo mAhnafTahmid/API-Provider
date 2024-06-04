@@ -32,10 +32,11 @@ const Login = () => {
                 console.log('Login Successful!');
                 alert('Login Successful!');
                 navigate('/profile');
+                window.location.reload();
             }
             else {
                 alert('Unable to login!')
-                console.log(response.message)
+                console.log('Unable to login!')
             }
         } catch (error) {
             console.log('Unable to connect to server', error)
