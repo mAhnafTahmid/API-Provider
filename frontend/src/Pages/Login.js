@@ -9,35 +9,42 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    try {
-        const response = await fetch('http://localhost:3501/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email,
-                password
+    const isUserSignedIn = !!localStorage.getItem('jwt');
+    if (!isUserSignedIn) {
+        try {
+            const response = await fetch('http://localhost:3501/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
             })
-        })
-        if (response.ok) {
-            const data = await response.json();
-            const token = data.token; 
-            localStorage.setItem('email', email)
-            localStorage.setItem('jwt', token); 
-            setEmail('');
-            setPassword('');
-            console.log('Login Successful!');
-            alert('Login Successful!');
-            navigate('/profile');
+            if (response.ok) {
+                const data = await response.json();
+                const token = data.token; 
+                localStorage.setItem('email', email)
+                localStorage.setItem('jwt', token); 
+                setEmail('');
+                setPassword('');
+                console.log('Login Successful!');
+                alert('Login Successful!');
+                navigate('/profile');
+            }
+            else {
+                alert('Unable to login!')
+                console.log(response.message)
+            }
+        } catch (error) {
+            console.log('Unable to connect to server', error)
         }
-        else {
-            alert('Unable to login!')
-            console.log(response.message)
-        }
-    } catch (error) {
-        console.log('Unable to connect to server', error)
     }
+    else {
+        alert('Need to sign-out before logging in to another account')
+    }
+    
   }
 
 
