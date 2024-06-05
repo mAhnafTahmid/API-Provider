@@ -9,7 +9,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    const isUserSignedIn = !!localStorage.getItem('jwt');
+    const isUserSignedIn = !!localStorage.getItem('jwt')
     if (!isUserSignedIn) {
         try {
             const response = await fetch('http://localhost:3501/login', {
@@ -23,16 +23,16 @@ const Login = () => {
                 })
             })
             if (response.ok) {
-                const data = await response.json();
-                const token = data.token; 
+                const data = await response.json()
+                const token = data.token 
                 localStorage.setItem('email', email)
-                localStorage.setItem('jwt', token); 
-                setEmail('');
-                setPassword('');
-                console.log('Login Successful!');
-                alert('Login Successful!');
-                navigate('/profile');
-                window.location.reload();
+                localStorage.setItem('jwt', token) 
+                setEmail('')
+                setPassword('')
+                console.log('Login Successful!')
+                alert('Login Successful!')
+                navigate('/profile')
+                window.location.reload()
             }
             else {
                 alert('Unable to login!')

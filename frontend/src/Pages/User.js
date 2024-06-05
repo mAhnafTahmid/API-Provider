@@ -25,8 +25,8 @@ const User = () => {
             alert('Api accessed successfully!')
         }
         else {
-            alert('Error in using the api!')
-            console.log('Error in using the api!')
+            alert('Cannot access the api!')
+            console.log('Error in using the api! Token has expired or is wrong or url is wrong!')
         }
     } catch (error) {
         console.log('Unable to connect to server', error)

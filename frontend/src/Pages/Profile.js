@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 const Profile = () => {
   const [tokens, setTokens] = useState([])
   const navigate = useNavigate()
-  const token = localStorage.getItem('jwt')
+  const tokenAuth = localStorage.getItem('jwt')
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -15,7 +15,7 @@ const Profile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${tokenAuth}`
           },
         });
         if (response.ok) {
@@ -26,6 +26,7 @@ const Profile = () => {
           localStorage.removeItem('jwt')
           localStorage.removeItem('email')
           navigate('/login')
+          window.location.reload()
         }
       } catch (error) {
         console.log(error.message)
@@ -41,7 +42,7 @@ const Profile = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${tokenAuth}`
         },
       });
       if (response.ok) {
@@ -54,10 +55,42 @@ const Profile = () => {
         localStorage.removeItem('email')
         alert('Your authorization token has expired! Please login again!')
         navigate('/login')
+        window.location.reload()
       }
     } catch (error) {
       console.log(error.message)
       alert('Unable to generate token!')
+    }
+  }
+
+  const handleDeleteToken = async (e, deletedToken) => {
+    e.preventDefault()
+    try {
+      const response = await fetch('http://localhost:3501/delete/token', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenAuth}`
+        },
+        body: JSON.stringify({
+          deletedToken: deletedToken
+        })
+      });
+      if (response.ok) {
+        const data = await response.json()
+        setTokens(data)
+        alert('Token has been deleted!')
+      }
+      else {
+        localStorage.removeItem('jwt')
+        localStorage.removeItem('email')
+        alert('Your authorization token has expired! Please login again!')
+        navigate('/login')
+        window.location.reload()
+      }
+    } catch (error) {
+      console.log(error.message)
+      alert('Unable to delete token!')
     }
   }
 
@@ -101,6 +134,12 @@ const Profile = () => {
                       Copy
                     </button>
                   </CopyToClipboard>
+                  <button 
+                    className="border-none rounded-3xl bg-red-500 text-black py-2 px-3 mr-3 focus:outline-none hover:bg-red-700 hover:text-white focus:bg-red-700 focus:text-white"
+                    onClick={(e) => {handleDeleteToken(e, token)}}
+                  >
+                      Delete
+                  </button>
                 </div>
               ))
             ) : (

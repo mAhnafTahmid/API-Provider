@@ -175,3 +175,22 @@ export const apiService = async (req, res) => {
         })
     }
 } 
+
+export const deleteToken = async (req, res) => {
+    try {
+        const email = req.user.email;
+        const user = await User.findOne({ email: email })
+        if (!user) {
+            return res.status(400).send('Invalid User!')
+        }
+        const deletedToken = req.body.deletedToken;
+        user.tokens = user.tokens.filter(token => token !== deletedToken);
+        await user.save();
+        res.status(200).send(user.tokens);
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send({
+            message: 'Internal Server Error!'
+        })
+    }
+}
