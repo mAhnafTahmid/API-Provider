@@ -4,6 +4,7 @@ import { useState } from 'react'
 const User = () => {
   const [token, setToken] = useState('')
   const [url, setUrl] = useState('')
+  const [retrivedInfo, setRetrivedInfo] = useState('')
 
   const handleApiAccess = async (e) => {
     e.preventDefault()
@@ -19,6 +20,7 @@ const User = () => {
         })
         if (response.ok) {
             const data = await response.json();
+            setRetrivedInfo(data)
             console.log(data)
             alert('Api accessed successfully!')
         }
@@ -36,6 +38,15 @@ const User = () => {
     <div className='flex items-center justify-center bg-gray-500 m-auto min-h-screen'>
         <div className=" border rounded-lg border-gray-500 bg-black shadow-2xl w-2/3 sm:w-1/4 min-h-[50%] py-10">
             <h1 className="text-3xl text-center text-white py-4">Api Use Interface</h1>
+            <div className="flex justify-center flex-col">
+                <h2 className="text-white text-center mb-3">Number of users</h2>
+                <input 
+                    type="text"
+                    value={retrivedInfo}
+                    className='text-black border border-blue-500 border-3 shadow-2xl py-2 px-3 rounded-lg focus:outline-none mx-auto w-1/5 text-center'
+                    readOnly
+                />
+            </div>
             <div className='flex flex-col w-3/4 mx-auto'>
                 <label className="text-left text-white pr-15 pt-5 pb-2">Enter Api URL</label>
                 <input 
